@@ -1,4 +1,4 @@
-htmp-power
+htop-power
 ==========
 
 This is a small patch for htop which adds a meter showing current battery power drain (wattage).
