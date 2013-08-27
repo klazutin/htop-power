@@ -1,0 +1,214 @@
+diff -rupN ./htop.old/CRT.c ./htop.new/CRT.c
+--- ./htop.old/CRT.c	2013-08-27 01:25:01.266952839 +0100
++++ ./htop.new/CRT.c	2013-08-25 00:50:19.521647451 +0100
+@@ -58,6 +58,7 @@ typedef enum ColorElements_ {
+    METER_VALUE,
+    LED_COLOR,
+    UPTIME,
++   POWER,
+    BATTERY,
+    TASKS_RUNNING,
+    SWAP,
+@@ -252,6 +253,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = A_BOLD;
+       CRT_colors[FAILED_SEARCH] = A_REVERSE | A_BOLD;
+       CRT_colors[UPTIME] = A_BOLD;
++      CRT_colors[POWER] = A_BOLD;
+       CRT_colors[BATTERY] = A_BOLD;
+       CRT_colors[LARGE_NUMBER] = A_BOLD;
+       CRT_colors[METER_TEXT] = A_NORMAL;
+@@ -313,6 +315,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = ColorPair(Blue,White);
+       CRT_colors[FAILED_SEARCH] = ColorPair(Red,Cyan);
+       CRT_colors[UPTIME] = ColorPair(Yellow,White);
++      CRT_colors[POWER] = ColorPair(Yellow,White);
+       CRT_colors[BATTERY] = ColorPair(Yellow,White);
+       CRT_colors[LARGE_NUMBER] = ColorPair(Red,White);
+       CRT_colors[METER_TEXT] = ColorPair(Blue,White);
+@@ -374,6 +377,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = ColorPair(Blue,Black);
+       CRT_colors[FAILED_SEARCH] = ColorPair(Red,Cyan);
+       CRT_colors[UPTIME] = ColorPair(Yellow,Black);
++      CRT_colors[POWER] = ColorPair(Yellow,Black);
+       CRT_colors[BATTERY] = ColorPair(Yellow,Black);
+       CRT_colors[LARGE_NUMBER] = ColorPair(Red,Black);
+       CRT_colors[METER_TEXT] = ColorPair(Blue,Black);
+@@ -435,6 +439,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = A_BOLD | ColorPair(Yellow,Blue);
+       CRT_colors[FAILED_SEARCH] = ColorPair(Red,Cyan);
+       CRT_colors[UPTIME] = A_BOLD | ColorPair(Yellow,Blue);
++      CRT_colors[POWER] = A_BOLD | ColorPair(Yellow,Blue);
+       CRT_colors[BATTERY] = A_BOLD | ColorPair(Yellow,Blue);
+       CRT_colors[LARGE_NUMBER] = A_BOLD | ColorPair(Red,Blue);
+       CRT_colors[METER_TEXT] = ColorPair(Cyan,Blue);
+@@ -496,6 +501,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = ColorPair(Black,White);
+       CRT_colors[FAILED_SEARCH] = ColorPair(Red,Cyan);
+       CRT_colors[UPTIME] = ColorPair(Green,Black);
++      CRT_colors[POWER] = ColorPair(Green,Black);
+       CRT_colors[BATTERY] = ColorPair(Green,Black);
+       CRT_colors[LARGE_NUMBER] = A_BOLD | ColorPair(Red,Black);
+       CRT_colors[METER_TEXT] = ColorPair(Cyan,Black);
+@@ -558,6 +564,7 @@ void CRT_setColors(int colorScheme) {
+       CRT_colors[PANEL_HIGHLIGHT_UNFOCUS] = ColorPair(Black,White);
+       CRT_colors[FAILED_SEARCH] = ColorPair(Red,Cyan);
+       CRT_colors[UPTIME] = A_BOLD | ColorPair(Cyan,Black);
++      CRT_colors[POWER] = A_BOLD | ColorPair(Cyan,Black);
+       CRT_colors[BATTERY] = A_BOLD | ColorPair(Cyan,Black);
+       CRT_colors[LARGE_NUMBER] = A_BOLD | ColorPair(Red,Black);
+       CRT_colors[METER_TEXT] = ColorPair(Cyan,Black);
+diff -rupN ./htop.old/CRT.h ./htop.new/CRT.h
+--- ./htop.old/CRT.h	2013-08-27 01:25:01.267952966 +0100
++++ ./htop.new/CRT.h	2013-08-25 00:50:19.534649118 +0100
+@@ -49,6 +49,7 @@ typedef enum ColorElements_ {
+    METER_VALUE,
+    LED_COLOR,
+    UPTIME,
++   POWER,
+    BATTERY,
+    TASKS_RUNNING,
+    SWAP,
+diff -rupN ./htop.old/Header.c ./htop.new/Header.c
+--- ./htop.old/Header.c	2013-08-27 01:25:01.262952330 +0100
++++ ./htop.new/Header.c	2013-08-25 00:50:19.540649887 +0100
+@@ -14,6 +14,7 @@ in the source distribution for its full
+ #include "TasksMeter.h"
+ #include "LoadAverageMeter.h"
+ #include "UptimeMeter.h"
++#include "PowerMeter.h"
+ #include "BatteryMeter.h"
+ #include "ClockMeter.h"
+ #include "HostnameMeter.h"
+diff -rupN ./htop.old/Makefile.am ./htop.new/Makefile.am
+--- ./htop.old/Makefile.am	2013-08-27 01:25:01.266952839 +0100
++++ ./htop.new/Makefile.am	2013-08-24 00:32:48.205231464 +0100
+@@ -19,7 +19,7 @@ DisplayOptionsPanel.c FunctionBar.c Hash
+ LoadAverageMeter.c MemoryMeter.c Meter.c MetersPanel.c Object.c Panel.c \
+ BatteryMeter.c Process.c ProcessList.c RichString.c ScreenManager.c Settings.c \
+ IOPriorityPanel.c SignalsPanel.c String.c SwapMeter.c TasksMeter.c TraceScreen.c \
+-UptimeMeter.c UsersTable.c Vector.c AvailableColumnsPanel.c AffinityPanel.c \
++UptimeMeter.c PowerMeter.c UsersTable.c Vector.c AvailableColumnsPanel.c AffinityPanel.c \
+ HostnameMeter.c OpenFilesScreen.c Affinity.c IOPriority.c IncSet.c
+ 
+ myhtopheaders = AvailableColumnsPanel.h AvailableMetersPanel.h \
+@@ -28,7 +28,7 @@ IOPriorityPanel.h CPUMeter.h CRT.h Displ
+ Hashtable.h Header.h htop.h ListItem.h LoadAverageMeter.h MemoryMeter.h \
+ BatteryMeter.h Meter.h MetersPanel.h Object.h Panel.h ProcessList.h RichString.h \
+ ScreenManager.h Settings.h SignalsPanel.h String.h SwapMeter.h TasksMeter.h \
+-TraceScreen.h UptimeMeter.h UsersTable.h Vector.h Process.h AffinityPanel.h \
++TraceScreen.h UptimeMeter.h PowerMeter.h UsersTable.h Vector.h Process.h AffinityPanel.h \
+ HostnameMeter.h OpenFilesScreen.h Affinity.h IOPriority.h IncSet.h
+ 
+ SUFFIXES = .h
+diff -rupN ./htop.old/Meter.c ./htop.new/Meter.c
+--- ./htop.old/Meter.c	2013-08-27 01:25:00.710882101 +0100
++++ ./htop.new/Meter.c	2013-08-25 00:50:19.536649374 +0100
+@@ -13,6 +13,7 @@ in the source distribution for its full
+ #include "TasksMeter.h"
+ #include "LoadAverageMeter.h"
+ #include "UptimeMeter.h"
++#include "PowerMeter.h"
+ #include "BatteryMeter.h"
+ #include "ClockMeter.h"
+ #include "HostnameMeter.h"
+@@ -134,6 +135,7 @@ MeterClass* Meter_types[] = {
+    &SwapMeter_class,
+    &TasksMeter_class,
+    &UptimeMeter_class,
++   &PowerMeter_class,
+    &BatteryMeter_class,
+    &HostnameMeter_class,
+    &AllCPUsMeter_class,
+diff -rupN ./htop.old/PowerMeter.c ./htop.new/PowerMeter.c
+--- ./htop.old/PowerMeter.c	1970-01-01 01:00:00.000000000 +0100
++++ ./htop.new/PowerMeter.c	2013-08-26 20:42:53.412146749 +0100
+@@ -0,0 +1,48 @@
++/*
++htop - PowerMeter.c
++(C) 2004-2011 Hisham H. Muhammad
++Released under the GNU GPL, see the COPYING file
++in the source distribution for its full text.
++*/
++
++#include "PowerMeter.h"
++
++#include "ProcessList.h"
++#include "CRT.h"
++
++#include <math.h>
++
++/*{
++#include "Meter.h"
++}*/
++
++int PowerMeter_attributes[] = {
++   POWER
++};
++
++static void PowerMeter_setValues(Meter* this, char* buffer, int len) {
++   int power;
++   FILE* fd = fopen("/sys/class/power_supply/BAT0/power_now", "r");
++   if (fd) {
++       fscanf(fd, "%i", &power);
++       fclose(fd);
++   }
++   float subpower = (float) power / 1000000; 
++   snprintf(buffer, len, "%.2f W", subpower);
++}
++
++MeterClass PowerMeter_class = {
++   .super = {
++      .extends = Class(Meter),
++      .delete = Meter_delete
++   },
++   .setValues = PowerMeter_setValues, 
++   .defaultMode = TEXT_METERMODE,
++   .items = 1,
++   .total = 100.0,
++   .attributes = PowerMeter_attributes,
++   .name = "Power",
++   .uiName = "Power",
++   .caption = "Power: "
++};
++
+diff -rupN ./htop.old/PowerMeter.h ./htop.new/PowerMeter.h
+--- ./htop.old/PowerMeter.h	1970-01-01 01:00:00.000000000 +0100
++++ ./htop.new/PowerMeter.h	2013-08-26 20:42:53.363140515 +0100
+@@ -0,0 +1,19 @@
++/* Do not edit this file. It was automatically generated. */
++
++#ifndef HEADER_PowerMeter
++#define HEADER_PowerMeter
++/*
++htop - PowerMeter.h
++(C) 2004-2011 Hisham H. Muhammad
++Released under the GNU GPL, see the COPYING file
++in the source distribution for its full text.
++*/
++
++#include "Meter.h"
++
++extern int PowerMeter_attributes[];
++
++extern MeterClass PowerMeter_class;
++
++
++#endif
+Binary files ./htop.old/.svn/wc.db and ./htop.new/.svn/wc.db differ
+diff -rupN ./htop.old/UptimeMeter.c ./htop.new/UptimeMeter.c
+--- ./htop.old/UptimeMeter.c	2013-08-27 01:24:59.666749261 +0100
++++ ./htop.new/UptimeMeter.c	2013-08-25 00:50:19.517646939 +0100
+@@ -63,3 +63,4 @@ MeterClass UptimeMeter_class = {
+    .uiName = "Uptime",
+    .caption = "Uptime: "
+ };
++
+diff -rupN ./htop.old/UptimeMeter.h ./htop.new/UptimeMeter.h
+--- ./htop.old/UptimeMeter.h	2013-08-27 01:24:59.668749516 +0100
++++ ./htop.new/UptimeMeter.h	2013-08-25 00:50:19.541650015 +0100
+@@ -15,4 +15,5 @@ extern int UptimeMeter_attributes[];
+ 
+ extern MeterClass UptimeMeter_class;
+ 
++
+ #endif
